@@ -262,40 +262,6 @@ function setupNavigator(){
   });
 }
 
-document.getElementById("btn-compose").addEventListener("click", async ()=>{
-  const selected = clips.filter(c=>c.selected);
-  if (!selected.length) return;
-  els.composeStatus.textContent = "Composing...";
-  els.composeStatus.style.color = "";
-  els.composeBtn.disabled = true;
-  try {
-    const { composeClips } = await import("./composer.js");
-    const out = await composeClips(selected.map(c=>c.blob), {
-      outroSeconds: 3,
-      logoUrl: "/logowhite.png",
-      outroAudio: "/hey_hype_radio (2).mp3",
-      width: 1280,
-      height: 720,
-      fps: 30
-    });
-    const url = URL.createObjectURL(out);
-    const prev = document.getElementById("final-preview");
-    prev.src = url;
-    prev.play().catch(()=>{});
-    const a = document.getElementById("download-link");
-    a.href = url;
-    a.style.display = "inline-block";
-    els.composeStatus.textContent = "Done.";
-  } catch (e){
-    console.error(e);
-    els.composeStatus.textContent = "Failed.";
-    els.composeStatus.style.color = "crimson";
-    alert("Composition failed. See console for details.");
-  } finally {
-    els.composeBtn.disabled = false;
-  }
-});
-
 els.pick.addEventListener("click", pickTab);
 els.start.addEventListener("click", startRecording);
 els.split.addEventListener("click", splitClip);
